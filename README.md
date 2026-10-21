@@ -1,4 +1,4 @@
-# Course Recommendation System
+# Online Courses Recommendation System
 
 This project is a Django-based course recommendation system that utilizes a hybrid approach, Content-Based Filtering (using TF-IDF on course descriptions) and Collaborative Filtering (using FunkSVD on user interactions).
 
@@ -19,7 +19,7 @@ This project is a Django-based course recommendation system that utilizes a hybr
 1.  **Clone the repository:**
     ```bash
     git clone <repository_url>
-    cd p2
+    cd <repo>
     ```
 
 2.  **Create and activate a virtual environment:**
