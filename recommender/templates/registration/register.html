@@ -1,0 +1,27 @@
+{% extends 'recommender/base.html' %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 2rem auto;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Join SD Learn</h2>
+    <form method="post"
+        style="box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 2rem; border-radius: 8px; background: white;">
+        {% csrf_token %}
+        {% for field in form %}
+        <div style="margin-bottom: 1rem;">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+            <small style="color: grey; display: block; margin-top: 5px;">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+            <p style="color: red; font-size: 0.8rem;">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn" style="width: 100%;">Register</button>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+            Already have an account? <a href="{% url 'login' %}" style="color: var(--primary);">Login here</a>
+        </p>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'recommender/base.html' %}
+
+{% block content %}
+<div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+    <div style="flex: 2; min-width: 300px;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <h1 style="margin-bottom: 0.5rem;">{{ course.title }}</h1>
+            <p style="color: #666; margin-bottom: 1.5rem;">
+                <strong>Instructor:</strong> {{ course.teacher }} |
+                <strong>School:</strong> {{ course.school }}
+            </p>
+
+            <div style="margin-bottom: 2rem; line-height: 1.8;">
+                <h3 style="border-bottom: 2px solid var(--gray); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                    Description</h3>
+                <p>{{ course.description }}</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3 style="border-bottom: 2px solid var(--gray); padding-bottom: 0.5rem; margin-bottom: 1rem;">Concepts
+                </h3>
+                <span style="background: #eee; padding: 0.2rem 0.6rem; border-radius: 4px;">{{ course.concepts }}</span>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                {% if user.is_authenticated %}
+                {% if is_enrolled %}
+                <div style="margin-bottom: 2rem; text-align: center;">
+                    <a href="{% url 'course_content' course.id %}" class="btn"
+                        style="background: #28a745; display: inline-block; width: 100%; font-size: 1.1rem; padding: 1rem;">
+                        ▶ Go to Course Content
+                    </a>
+                </div>
+
+                <h3 style="margin-bottom: 1rem;">Rate this Course</h3>
+                <form method="post" style="box-shadow: none; padding: 0; background: none;">
+                    {% csrf_token %}
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="rating" value="5"
+                            {% if user_rating == 5 %}checked{% endif %} />
+                        <label for="star5" title="Excellent"></label>
+
+                        <input type="radio" id="star4" name="rating" value="4"
+                            {% if user_rating == 4 %}checked{% endif %} />
+                        <label for="star4" title="Very Good"></label>
+
+                        <input type="radio" id="star3" name="rating" value="3"
+                            {% if user_rating == 3 %}checked{% endif %} />
+                        <label for="star3" title="Good"></label>
+
+                        <input type="radio" id="star2" name="rating" value="2"
+                            {% if user_rating == 2 %}checked{% endif %} />
+                        <label for="star2" title="Fair"></label>
+
+                        <input type="radio" id="star1" name="rating" value="1"
+                            {% if user_rating == 1 %}checked{% endif %} />
+                        <label for="star1" title="Poor"></label>
+
+                    </div>
+                    <button type="submit" class="btn"
+                        style="width: auto; margin-top: 1rem; padding: 0.5rem 1.5rem; font-size: 0.9rem;">
+                        {% if user_rating %}Update Rating{% else %}Submit Rating{% endif %}
+                    </button>
+                </form>
+
+                {% if user_rating %}
+                <p style="margin-top: 1rem; color: green; font-weight: 500;">You rated this course: {{ user_rating }}/5
+                </p>
+                {% endif %}
+
+                {% else %}
+                <div style="text-align: center; padding: 1rem 0;">
+                    <h3 style="margin-bottom: 1rem;">Join this Course</h3>
+                    <p style="margin-bottom: 1.5rem; color: #666;">Enroll to access course materials and rate content.
+                    </p>
+                    <a href="{% url 'enroll_course' course.id %}" class="btn"
+                        style="width: 100%; display: block; font-size: 1.1rem; padding: 0.8rem;">
+                        Enroll Now
+                    </a>
+                </div>
+                {% endif %}
+                {% else %}
+                <p>Please <a href="{% url 'login' %}">login</a> to enroll in this course.</p>
+                {% endif %}
+            </div>
+
+            <style>
+                .star-rating {
+                    display: flex;
+                    flex-direction: row-reverse;
+                    justify-content: flex-end;
+                    gap: 0.5rem;
+                }
+
+                .star-rating input {
+                    display: none;
+                }
+
+                .star-rating label {
+                    font-size: 2rem;
+                    color: #ddd;
+                    cursor: pointer;
+                    transition: color 0.2s;
+                }
+
+                .star-rating label::before {
+                    content: '★';
+                }
+
+                .star-rating input:checked~label,
+                .star-rating label:hover,
+                .star-rating label:hover~label {
+                    color: #ffc107;
+                }
+            </style>
+        </div>
+    </div>
+
+    <div style="flex: 1; min-width: 300px;">
+        <h3 class="section-title" style="margin-top: 0;">Similar Courses (CBF)</h3>
+        {% if cbf_recs %}
+        <div style="display: grid; gap: 1rem;">
+            {% for c in cbf_recs %}
+            {% if c.id != course.id %}
+            <div class="card" style="padding: 1rem;">
+                <h4>
+                    <a href="{% url 'course_detail' c.id %}" style="text-decoration: none; color: var(--dark);">
+                        {{ c.title }}
+                    </a>
+                </h4>
+                <p style="font-size: 0.8rem; color: #666;">{{ c.school }}</p>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No similar courses found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

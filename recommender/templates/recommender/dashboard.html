@@ -1,0 +1,115 @@
+{% extends 'recommender/base.html' %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem;">Your Personal Recommendations</h1>
+
+<div class="recommendation-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 class="section-title" style="margin-bottom: 0;">
+            {% if is_cold_start %}Most Popular Courses{% else %}People Also Liked{% endif %}
+        </h2>
+        <span
+            style="background: #e3f2fd; color: #1976d2; padding: 4px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: 500;">
+            Collaboratif Recommendations
+        </span>
+    </div>
+    <p style="margin-bottom: 1rem; color: #666;">
+        {% if is_cold_start %}
+        Start interacting with courses to get personalized suggestions! Here are some favorites to get you started.
+        {% else %}
+        Suggested based on your interests and similar students.
+        {% endif %}
+    </p>
+    {% if cf_recs %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+        {% for course in cf_recs %}
+        <div class="card">
+            <div>
+                <h3>
+                    <a href="{% url 'course_detail' course.id %}" style="text-decoration: none; color: var(--dark);">
+                        {{ course.title }}
+                    </a>
+                </h3>
+                <p style="font-size: 0.9rem; color: #555; margin: 0.5rem 0;">{{ course.school }}</p>
+            </div>
+            <a href="{% url 'course_detail' course.id %}" class="btn btn-outline"
+                style="font-size: 0.8rem; margin-top: 1rem; text-align:center;">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Start rating courses to get personalized suggestions!</p>
+    {% endif %}
+</div>
+
+<!-- Content-Based User Profile -->
+<section style="margin-bottom: 3rem; margin-top: 3rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2>Because you liked similar courses</h2>
+        <span
+            style="background: #e3f2fd; color: #1976d2; padding: 4px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: 500;">
+            Content-Based Recommendations
+        </span>
+    </div>
+
+    {% if cbf_recs %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+        {% for course in cbf_recs %}
+        <div class="card">
+            <div>
+                <h3>
+                    <a href="{% url 'course_detail' course.id %}" style="text-decoration: none; color: var(--dark);">
+                        {{ course.title }}
+                    </a>
+                </h3>
+                <p style="font-size: 0.9rem; color: #555; margin: 0.5rem 0;">{{ course.school }}</p>
+                <div style="margin-top: 0.5rem;">
+                    <span class="badge" style="background:#f5f5f5; color:#666;">Similar Content</span>
+                </div>
+            </div>
+            <a href="{% url 'course_detail' course.id %}" class="btn btn-outline"
+                style="font-size: 0.8rem; margin-top: 1rem; display:block; text-align:center;">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem; background: #fafafa; border: 1px dashed #ddd;">
+        <p style="color: #666; font-size: 1.1rem;">Rate more courses to unlock content-based recommendations!</p>
+        <a href="{% url 'course_list' %}" class="btn" style="margin-top: 1rem; display: inline-block;">Browse
+            Courses</a>
+    </div>
+    {% endif %}
+</section>
+
+<div class="recommendation-section" style="margin-top: 3rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 class="section-title" style="margin-bottom: 0;">Recommended for you</h2>
+        <span
+            style="background: #e3f2fd; color: #1976d2; padding: 4px 12px; border-radius: 15px; font-size: 0.85rem; font-weight: 500;">
+            Hybrid Recommendations
+        </span>
+    </div>
+    <p style="margin-bottom: 1rem; color: #666;">A balanced mix of content and collaborative suggestions.</p>
+    {% if hybrid_recs %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+        {% for course in hybrid_recs %}
+        <div class="card">
+            <div>
+                <h3>
+                    <a href="{% url 'course_detail' course.id %}" style="text-decoration: none; color: var(--dark);">
+                        {{ course.title }}
+                    </a>
+                </h3>
+                <p style="font-size: 0.9rem; color: #555; margin: 0.5rem 0;">{{ course.school }}</p>
+            </div>
+            <a href="{% url 'course_detail' course.id %}" class="btn btn-outline"
+                style="font-size: 0.8rem; margin-top: 1rem; text-align:center;">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Interact more to unlock hybrid recommendations.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

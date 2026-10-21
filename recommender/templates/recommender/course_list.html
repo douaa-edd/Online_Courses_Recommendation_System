@@ -1,0 +1,23 @@
+{% extends 'recommender/base.html' %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem;">All Courses</h1>
+
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+    {% for course in courses %}
+    <div class="card">
+        <div>
+            <h3>
+                <a href="{% url 'course_detail' course.id %}" style="text-decoration: none; color: var(--dark);">
+                    {{ course.title }}
+                </a>
+            </h3>
+            <p style="font-size: 0.9rem; color: #555; margin: 0.5rem 0;">{{ course.school }}</p>
+        </div>
+        <a href="{% url 'course_detail' course.id %}" class="btn btn-outline"
+            style="font-size: 0.8rem; margin-top: 1rem; display:block; text-align:center;">View Details</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

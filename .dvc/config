@@ -1,0 +1,4 @@
+[core]
+    remote = localstorage
+['remote "localstorage"']
+    url = c:\Users\PC\Desktop\SR\p2\dvc_store

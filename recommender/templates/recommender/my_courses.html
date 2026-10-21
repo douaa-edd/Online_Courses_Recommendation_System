@@ -1,0 +1,62 @@
+{% extends 'recommender/base.html' %}
+
+{% block content %}
+<h1 style="margin-bottom: 2rem;">My Learning</h1>
+
+{% if interactions %}
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+    {% for interaction in interactions %}
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+            <div style="margin-bottom: 0.5rem;">
+                <span
+                    style="background: #e3f2fd; color: #0570c7; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                    {{ interaction.course.original_id }}
+                </span>
+            </div>
+            <h3>
+                <a href="{% url 'course_detail' interaction.course.id %}"
+                    style="text-decoration: none; color: var(--dark);">
+                    {{ interaction.course.title }}
+                </a>
+            </h3>
+            <p style="font-size: 0.9rem; color: #555; margin: 0.5rem 0;">{{ interaction.course.school }}</p>
+
+            <div style="margin-top: 1rem; font-size: 0.9rem;">
+                {% if interaction.rating > 0 %}
+                <span style="color: #ffc107;">
+                    {% if interaction.rating >= 4.5 %}★★★★★
+                    {% elif interaction.rating >= 3.5 %}★★★★☆
+                    {% elif interaction.rating >= 2.5 %}★★★☆☆
+                    {% elif interaction.rating >= 1.5 %}★★☆☆☆
+                    {% else %}★☆☆☆☆
+                    {% endif %}
+                </span>
+                <span style="color: #666; margin-left: 0.5rem;">({{ interaction.rating }})</span>
+                {% else %}
+                <span style="color: #28a745; font-weight: 500;">Enrolled</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; border-top: 1px solid #eee; padding-top: 1rem; display: flex; gap: 0.5rem;">
+            <a href="{% url 'course_content' interaction.course.id %}" class="btn"
+                style="flex: 2; text-align: center; font-size: 0.9rem; background: #0570c7; color: white;">
+                Go to Classroom
+            </a>
+            <a href="{% url 'course_detail' interaction.course.id %}" class="btn btn-outline"
+                style="flex: 1; text-align: center; font-size: 0.9rem;">
+                Details
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align: center; padding: 4rem 2rem; background: white; border-radius: 8px;">
+    <h2>You haven't enrolled in any courses yet.</h2>
+    <p style="color: #666; margin-bottom: 2rem;">Explore our catalog to find your next learning journey.</p>
+    <a href="{% url 'course_list' %}" class="btn" style="padding: 1rem 2rem;">Browse All Courses</a>
+</div>
+{% endif %}
+{% endblock %}

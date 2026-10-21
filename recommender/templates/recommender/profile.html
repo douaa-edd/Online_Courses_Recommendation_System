@@ -1,0 +1,24 @@
+{% extends 'recommender/base.html' %}
+
+{% block content %}
+<div
+    style="max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+    <h1 style="margin-bottom: 2rem;">User Profile</h1>
+
+    <div style="margin-bottom: 1rem;">
+        <strong>Username:</strong> {{ user.username }}
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+        <strong>Date Joined:</strong> {{ user.date_joined|date:"F d, Y" }}
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <h3 style="margin-bottom: 1rem;">Account Actions</h3>
+        <form action="{% url 'logout' %}" method="post" style="box-shadow:none; padding:0; background:none;">
+            {% csrf_token %}
+            <button type="submit" class="btn">Logout</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
